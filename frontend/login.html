@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - CarRental Pro</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav class="navbar" id="main-nav"></nav>
+
+    <div class="container">
+        <!-- USE CASE NAME: UC-02 User Login -->
+        <div class="card" style="max-width: 400px; margin: 4rem auto;">
+            <h2 style="text-align: center; margin-bottom: 2rem;">Welcome Back</h2>
+            <p style="text-align: center; font-size: 0.9rem; color: #777; margin-bottom: 2rem;">
+                This UI maps to <strong>UC-02: User Login</strong>, authenticating users based on roles stored in the database.
+            </p>
+            
+            <div id="alert-error" class="alert alert-error"></div>
+            
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" placeholder="Enter username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Enter password" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Sign In</button>
+            </form>
+            <p style="text-align: center; margin-top: 1rem;">
+                Don't have an account? <a href="register.html">Register here</a>
+            </p>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        document.getElementById('login-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            // In a real app, this calls login({ username, password }) from auth.js
+            console.log('Logging in with:', { username, password });
+            
+            // Simulate role-based redirect for demo purposes
+            if (username === 'admin') {
+                localStorage.setItem('car_rental_user', JSON.stringify({ username: 'admin' }));
+                localStorage.setItem('car_rental_role', 'Admin');
+                window.location.href = 'dashboard.html';
+            } else {
+                localStorage.setItem('car_rental_user', JSON.stringify({ username: username }));
+                localStorage.setItem('car_rental_role', 'Customer');
+                window.location.href = 'cars.html';
+            }
+        });
+    </script>
+</body>
+</html>

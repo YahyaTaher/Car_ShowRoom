@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Your Car - CarRental Pro</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav class="navbar" id="main-nav"></nav>
+
+    <div class="container">
+        <!-- USE CASE NAME: UC-07 Search & Filter Cars -->
+        <div class="card" style="margin-bottom: 3rem;">
+            <h2>Find Your Perfect Car</h2>
+            <p style="font-size: 0.9rem; color: #777; margin-bottom: 2rem;">
+                This UI implements <strong>UC-07: Search & Filter Cars</strong>, querying car and branch availability from the backend.
+            </p>
+            
+            <form id="search-form" class="grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+                <div class="form-group">
+                    <label>Company</label>
+                    <select id="filter-company">
+                        <option value="">All Companies</option>
+                        <option value="1">BMW</option>
+                        <option value="2">Mercedes</option>
+                        <option value="3">Audi</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Model</label>
+                    <input type="text" id="filter-model" placeholder="Enter model name">
+                </div>
+                <div class="form-group">
+                    <label>Branch</label>
+                    <select id="filter-branch">
+                        <option value="">All Locations</option>
+                        <option value="1">Main Branch, NYC</option>
+                        <option value="2">Downtown, LA</option>
+                    </select>
+                </div>
+                <div class="form-group" style="display: flex; align-items: flex-end;">
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Search Cars</button>
+                </div>
+            </form>
+        </div>
+
+        <div id="loading" style="text-align: center; display: none;">
+            <p>Searching inventory...</p>
+        </div>
+
+        <!-- USE CASE NAME: UC-08 Create Rental Contract (Booking) -->
+        <div id="car-results" class="grid">
+            <!-- Mock Car Card (UI for UC-08 trigger) -->
+            <div class="card car-card">
+                <h3>BMW 3 Series (2023)</h3>
+                <p class="price">$85.00 / day</p>
+                <p>Location: Main Branch, NYC</p>
+                <p style="margin: 1rem 0; font-size: 0.85rem; color: #666;">
+                    Select this car to initiate <strong>UC-08: Create Rental Contract</strong>.
+                </p>
+                <button class="btn btn-primary book-btn" data-car-id="1">Rent This Car</button>
+            </div>
+            
+            <div class="card car-card">
+                <h3>Audi A4 (2022)</h3>
+                <p class="price">$75.00 / day</p>
+                <p>Location: Downtown, LA</p>
+                <p style="margin: 1rem 0; font-size: 0.85rem; color: #666;">
+                    Available for immediate rental contract creation.
+                </p>
+                <button class="btn btn-primary book-btn" data-car-id="2">Rent This Car</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Booking Modal (UI for UC-08 flow) -->
+    <div id="booking-modal" style="display:none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center;">
+        <div class="card" style="width: 100%; max-width: 500px;">
+            <h3>Finalize Your Rental Contract</h3>
+            <p style="margin-bottom: 2rem; font-size: 0.9rem;">
+                This flow completes <strong>UC-08</strong> by creating a record in the <code>Contract</code> table.
+            </p>
+            <form id="booking-form">
+                <div class="form-group">
+                    <label>Payment Method</label>
+                    <select id="payment-method" required>
+                        <option value="1">Credit Card</option>
+                        <option value="2">PayPal</option>
+                        <option value="3">Cash on Pickup</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Rental Duration (Days)</label>
+                    <input type="number" id="rental-days" min="1" value="1" required>
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <button type="submit" class="btn btn-primary">Confirm Booking</button>
+                    <button type="button" id="close-modal" class="btn btn-accent">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/search.js"></script>
+    <script src="js/rent.js"></script>
+    <script>
+        // Trigger for UC-08 Flow
+        document.querySelectorAll('.book-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                openBookingModal(btn.getAttribute('data-car-id'));
+            });
+        });
+
+        document.getElementById('close-modal').addEventListener('click', () => {
+            closeBookingModal();
+        });
+
+        document.getElementById('booking-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const carId = document.getElementById('booking-modal').getAttribute('data-car-id');
+            const method = document.getElementById('payment-method').value;
+            const days = document.getElementById('rental-days').value;
+            
+            console.log('Initiating UC-08 Contract creation...', { carId, method, days });
+            // In a real app, this calls createRentalContract({ carId, method, days }) from rent.js
+            alert('Contract successfully created! (UC-08 Flow Complete)');
+            closeBookingModal();
+        });
+
+        // Trigger for UC-07 Flow
+        document.getElementById('search-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const filters = {
+                company: document.getElementById('filter-company').value,
+                model: document.getElementById('filter-model').value,
+                branch: document.getElementById('filter-branch').value
+            };
+            
+            // In a real app, this calls searchCars(filters) from search.js
+            console.log('UC-07 Search filters applied:', filters);
+            const loading = document.getElementById('loading');
+            loading.style.display = 'block';
+            setTimeout(() => { loading.style.display = 'none'; }, 1000);
+        });
+    </script>
+</body>
+</html>

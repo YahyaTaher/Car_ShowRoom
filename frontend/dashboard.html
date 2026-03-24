@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - CarRental Pro</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav class="navbar" id="main-nav"></nav>
+
+    <div class="dashboard-layout">
+        <!-- Sidebar Navigation for UC-03, UC-04, UC-05, UC-06 -->
+        <aside class="sidebar">
+            <h3 style="margin-bottom: 2rem;">Admin Panel</h3>
+            <ul style="list-style: none; display: flex; flex-direction: column; gap: 1rem;">
+                <li><a href="#inventory" class="nav-link" style="color: white; text-decoration: none;">Inventory (UC-03)</a></li>
+                <li><a href="#pricing" class="nav-link" style="color: white; text-decoration: none;">Pricing (UC-04)</a></li>
+                <li><a href="#branches" class="nav-link" style="color: white; text-decoration: none;">Branches (UC-05)</a></li>
+                <li><a href="#employees" class="nav-link" style="color: white; text-decoration: none;">Employees (UC-06)</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <!-- USE CASE NAME: UC-03 Manage Car Inventory -->
+            <section id="inventory" class="card">
+                <h2>Manage Car Inventory</h2>
+                <p style="font-size: 0.9rem; color: #777; margin-bottom: 2rem;">
+                    This UI implements <strong>UC-03: Manage Car Inventory</strong>, allowing the Admin to add new cars and assign them to branches.
+                </p>
+                <form id="inventory-form" class="grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+                    <div class="form-group">
+                        <label>Company</label>
+                        <select id="car-company" required>
+                            <option value="1">BMW</option>
+                            <option value="2">Mercedes</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Model</label>
+                        <input type="text" id="car-model" placeholder="Model Name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Year</label>
+                        <input type="number" id="car-year" min="1900" max="2026" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Assign to Branch</label>
+                        <select id="car-branch" required>
+                            <option value="1">Main Branch, NYC</option>
+                            <option value="2">Downtown, LA</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="display: flex; align-items: flex-end;">
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">Add Car</button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- USE CASE NAME: UC-04 Update Car Pricing -->
+            <section id="pricing" class="card">
+                <h2>Update Car Pricing</h2>
+                <p style="font-size: 0.9rem; color: #777; margin-bottom: 2rem;">
+                    This UI implements <strong>UC-04: Update Car Pricing</strong>, adding a new record to the <code>Car_Price_History</code> table.
+                </p>
+                <form id="pricing-form" class="grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+                    <div class="form-group">
+                        <label>Select Car</label>
+                        <select id="pricing-car" required>
+                            <option value="1">BMW 3 Series (2023)</option>
+                            <option value="2">Audi A4 (2022)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>New Price ($ / Day)</label>
+                        <input type="number" id="new-price" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Effective Date</label>
+                        <input type="date" id="pricing-date" required>
+                    </div>
+                    <div class="form-group" style="display: flex; align-items: flex-end;">
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">Update Price</button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- USE CASE NAME: UC-06 Employee Onboarding & Salary -->
+            <section id="employees" class="card">
+                <h2>Employee Onboarding</h2>
+                <p style="font-size: 0.9rem; color: #777; margin-bottom: 2rem;">
+                    This UI implements <strong>UC-06: Employee Onboarding</strong>, linking records across <code>employee</code> and <code>salary_history</code>.
+                </p>
+                <form id="employee-form" class="grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+                    <div class="form-group">
+                        <label>First Name</label>
+                        <input type="text" id="emp-fname" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Last Name</label>
+                        <input type="text" id="emp-lname" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Job Title</label>
+                        <select id="emp-job" required>
+                            <option value="1">Manager</option>
+                            <option value="2">Clerk</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Salary</label>
+                        <input type="number" id="emp-salary" step="0.01" required>
+                    </div>
+                    <div class="form-group" style="display: flex; align-items: flex-end;">
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">Onboard Employee</button>
+                    </div>
+                </form>
+            </section>
+        </main>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script>
+        // Event listeners for each Admin Use Case (Mocked)
+        document.getElementById('inventory-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            console.log('Adding new car to inventory (UC-03 Flow)...');
+            alert('Car added to inventory and assigned to branch! (UC-03 Flow Complete)');
+        });
+
+        document.getElementById('pricing-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            console.log('Updating car pricing (UC-04 Flow)...');
+            alert('Price history updated successfully! (UC-04 Flow Complete)');
+        });
+
+        document.getElementById('employee-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            console.log('Onboarding new employee (UC-06 Flow)...');
+            alert('Employee onboarded and salary history initialized! (UC-06 Flow Complete)');
+        });
+    </script>
+</body>
+</html>

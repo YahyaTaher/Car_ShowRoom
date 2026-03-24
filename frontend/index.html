@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome - CarRental Pro</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .hero {
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(rgba(44, 62, 80, 0.8), rgba(44, 62, 80, 0.8)), url('https://images.unsplash.com/photo-1494976388531-d1058494cdd8?auto=format&fit=crop&w=1200&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+        }
+        .hero h1 { font-size: 3.5rem; margin-bottom: 1rem; }
+        .hero p { font-size: 1.2rem; margin-bottom: 2rem; max-width: 600px; }
+        .features { padding: 4rem 0; text-align: center; }
+        .features h2 { margin-bottom: 3rem; }
+    </style>
+</head>
+<body>
+    <nav class="navbar" id="main-nav"></nav>
+
+    <div class="hero">
+        <h1>Premium Car Rental Services</h1>
+        <p>Your one-stop solution for managing vehicle rentals, employee logistics, and branch inventory with professional ease.</p>
+        <div style="display: flex; gap: 1rem;">
+            <a href="register.html" class="btn btn-primary">Get Started (UC-01)</a>
+            <a href="login.html" class="btn btn-accent">Member Login (UC-02)</a>
+        </div>
+    </div>
+
+    <div class="container features">
+        <h2>Core System Capabilities</h2>
+        <div class="grid">
+            <div class="card">
+                <h3>Car Search (UC-07)</h3>
+                <p>Advanced filtering by model, year, and branch availability.</p>
+            </div>
+            <div class="card">
+                <h3>Smart Renting (UC-08)</h3>
+                <p>Automated contract generation and payment handling.</p>
+            </div>
+            <div class="card">
+                <h3>Admin Control (UC-03, 04, 05, 06)</h3>
+                <p>Full-scale management of inventory, branches, and staff.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+</body>
+</html>
