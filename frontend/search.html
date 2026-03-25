@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Cars - CarRental Pro</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav class="navbar" id="main-nav"></nav>
+
+    <div class="container">
+        <!-- USE CASE NAME: UC-07 Search & Filter Cars -->
+        <div class="card">
+            <h2>Search Car Availability</h2>
+            <p style="font-size: 0.9rem; color: #777; margin-bottom: 2rem;">
+                This UI implements <strong>UC-07: Search & Filter Cars</strong>.
+            </p>
+            
+            <form id="search-form" class="grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+                <div class="form-group">
+                    <label>Company</label>
+                    <select id="filter-company">
+                        <option value="">All Companies</option>
+                        <option value="1">BMW</option>
+                        <option value="2">Mercedes</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Branch</label>
+                    <select id="filter-branch">
+                        <option value="">All Locations</option>
+                        <option value="1">Main Branch, NYC</option>
+                    </select>
+                </div>
+                <div class="form-group" style="display: flex; align-items: flex-end;">
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Search</button>
+                </div>
+            </form>
+        </div>
+
+        <div id="car-results" class="grid" style="margin-top: 2rem;">
+            <!-- Results will be rendered here by search.js -->
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/search.js"></script>
+    <script>
+        document.getElementById('search-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const filters = {
+                company: document.getElementById('filter-company').value,
+                branch: document.getElementById('filter-branch').value
+            };
+            searchCars(filters);
+        });
+    </script>
+</body>
+</html>
