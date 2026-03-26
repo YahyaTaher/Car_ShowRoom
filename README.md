@@ -230,7 +230,7 @@ For any inquiries or suggestions, please contact us:
 
 ***
 
-**Note**: This project is frontend only. It needs to be connected to a backend to handle the real database.
+**Note**: This project is frontend and backend now.
 
 > > > > > > > 1e825f0b9681f04db0b2f8d795974abd044696f5
 
