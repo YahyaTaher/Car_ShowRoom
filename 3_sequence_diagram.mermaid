@@ -1,0 +1,68 @@
+%% ============================================================
+%%  Car Rental Management System – Sequence Diagram
+%%  Scenario: Customer Browses, Selects & Rents a Car
+%% ============================================================
+sequenceDiagram
+    autonumber
+
+    actor Customer
+    participant WebApp as 🌐 Web Application
+    participant AuthService as 🔐 Auth Service
+    participant CarService as 🚗 Car Service
+    participant ContractService as 📋 Contract Service
+    participant PaymentGateway as 💳 Payment Gateway
+    participant CarDB as 🗄️ Car DB
+    participant NotificationService as 📧 Notification Service
+
+    %% Authentication
+    Customer->>WebApp: Visit rental portal
+    WebApp->>AuthService: Request login page
+    AuthService-->>WebApp: Return login form
+    Customer->>WebApp: Submit credentials
+    WebApp->>AuthService: Validate credentials
+    AuthService-->>WebApp: Return JWT token
+    WebApp-->>Customer: Grant access (dashboard)
+
+    %% Browsing
+    Customer->>WebApp: Search cars (brand, model, availability)
+    WebApp->>CarService: GET /api/cars?brand=...&model=...
+    CarService->>CarDB: Query available cars
+    CarDB-->>CarService: Return car list with pricing
+    CarService-->>WebApp: Return filtered results
+    WebApp-->>Customer: Display car listings
+
+    %% Car Detail View
+    Customer->>WebApp: Click on a car
+    WebApp->>CarService: GET /api/cars/{carId}
+    CarService->>CarDB: Fetch car details
+    CarDB-->>CarService: Car details (brand, model, pricePerDay, status)
+    CarService-->>WebApp: Return car details
+    WebApp-->>Customer: Show car details & daily rate
+
+    %% Date Selection & Cost Calculation
+    Customer->>WebApp: Select pickup date & return date
+    WebApp->>ContractService: POST /api/contracts/calculate {carId, startTime, endTime}
+    ContractService-->>WebApp: Calculate total rental cost
+    WebApp-->>Customer: Display rental summary (cost breakdown)
+
+    %% Create Contract
+    Customer->>WebApp: Click "Rent Now"
+    WebApp->>ContractService: POST /api/contracts/create {carId, customerId, startTime, endTime}
+    ContractService->>CarDB: Check car availability for date range
+    CarDB-->>ContractService: Availability confirmed
+    ContractService-->>WebApp: Contract draft created
+
+    %% Payment
+    WebApp-->>Customer: Show contract summary + payment form
+    Customer->>WebApp: Submit payment details
+    WebApp->>PaymentGateway: POST /payment/charge {amount, card}
+    PaymentGateway-->>WebApp: Payment success + transaction ID
+
+    %% Post-payment
+    WebApp->>ContractService: PATCH /api/contracts/{contractId}/confirm {txnId}
+    ContractService->>CarDB: Update car status to RENTED
+    CarDB-->>ContractService: Status updated
+    ContractService->>NotificationService: Trigger confirmation email
+    NotificationService-->>Customer: 📧 Rental confirmation email sent
+    ContractService-->>WebApp: Contract finalized (status: ACTIVE)
+    WebApp-->>Customer: Show success page + booking confirmation download

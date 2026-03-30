@@ -1,0 +1,55 @@
+%% ============================================================
+%%  Car Rental Management System – Activity Diagram
+%%  Flow: Customer Car Rental Process
+%% ============================================================
+flowchart TD
+    Start(["🟢 Start"])
+
+    A["Customer Visits Rental Portal"]
+    B["Browse / Search Available Cars"]
+    C{{"Car Found?"}}
+    D["View Car Details & Pricing"]
+    E{{"Interested to Rent?"}}
+    F["Select Pickup Date & Time"]
+    G["Select Return Date & Time"]
+    H["View Total Rental Cost"]
+    I{{"Proceed with Booking?"}}
+    J{{"Customer Registered?"}}
+    K["Register / Login"]
+    L["Create Rental Contract"]
+    M{{"Any Discount/Promo Code?"}}
+    N["Apply Promo Code"]
+    O["Review Contract Summary"]
+    P{{"Confirm Rental?"}}
+    Q["Select Payment Method"]
+    R{{"Payment Successful?"}}
+    S["Update Car Availability"]
+    T["Generate Booking Confirmation"]
+    U["Send Confirmation Email"]
+    V["Rental Contract Activated ✅"]
+    W["Retry Payment / Contact Support"]
+    X["Continue Browsing"]
+    End(["🔴 End"])
+
+    Start --> A --> B --> C
+    C -- No --> X --> B
+    C -- Yes --> D --> E
+    E -- No --> X
+    E -- Yes --> F --> G --> H --> I
+    I -- No --> End
+    I -- Yes --> J
+    J -- No --> K --> L
+    J -- Yes --> L
+    L --> M
+    M -- Yes --> N --> O
+    M -- No --> O
+    O --> P
+    P -- No --> End
+    P -- Yes --> Q --> R
+    R -- No --> W --> Q
+    R -- Yes --> S --> T --> U --> V --> End
+
+    style Start fill:#2ecc71,color:#fff
+    style End fill:#e74c3c,color:#fff
+    style V fill:#27ae60,color:#fff
+    style W fill:#e67e22,color:#fff

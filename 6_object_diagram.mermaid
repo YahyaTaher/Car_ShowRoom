@@ -1,0 +1,87 @@
+%% ============================================================
+%%  Car Rental Management System – Object Diagram
+%%  Snapshot: A specific customer renting a specific car
+%% ============================================================
+classDiagram
+    direction LR
+
+    class `customer101 : Customer` {
+        id = 101
+        name = "Ahmed Hassan"
+        email = "ahmed@email.com"
+        phone = "+20-555-1234"
+        address = "Cairo, Egypt"
+        licenseNumber = "EG-2024-XYZ"
+        role = "customer"
+    }
+
+    class `car2024 : Car` {
+        id = 2024
+        plateNumber = "ABC-123"
+        brand = "Toyota"
+        model = "Camry"
+        year = 2024
+        color = "Pearl White"
+        pricePerDay = 250.00
+        status = "RENTED"
+    }
+
+    class `contract5501 : Contract` {
+        id = 5501
+        customerId = 101
+        carId = 2024
+        startTime = "2024-03-15 09:00"
+        endTime = "2024-03-20 09:00"
+        totalPrice = 1250.00
+        status = "ACTIVE"
+        rentalDays = 5
+    }
+
+    class `payment9901 : Payment` {
+        id = 9901
+        contractId = 5501
+        amount = 1250.00
+        method = "Credit Card"
+        transactionId = "TXN-20240315-9901"
+        paymentDate = "2024-03-15 09:30"
+        status = "Success"
+    }
+
+    class `branch201 : Branch` {
+        id = 201
+        name = "Cairo Main Branch"
+        location = "Downtown Cairo"
+        phone = "+20-555-RENT"
+        availableCars = 45
+    }
+
+    class `employee202 : Employee` {
+        id = 202
+        employeeId = "EMP-202"
+        name = "Fatima Ahmed"
+        department = "Customer Service"
+        role = "employee"
+        branch = "Cairo Main"
+    }
+
+    class `role_customer : Role` {
+        id = 1
+        name = "CUSTOMER"
+        description = "Regular customer with rental capabilities"
+    }
+
+    class `role_employee : Role` {
+        id = 2
+        name = "EMPLOYEE"
+        description = "Employee with fleet management access"
+    }
+
+    %% Object links (instances)
+    `customer101 : Customer` --> `role_customer : Role`        : has role
+    `customer101 : Customer` --> `contract5501 : Contract`      : creates
+    `employee202 : Employee` --> `role_employee : Role`         : has role
+    `employee202 : Employee` --> `branch201 : Branch`           : works at
+    `employee202 : Employee` --> `contract5501 : Contract`      : processes
+    `branch201 : Branch` --> `car2024 : Car`                    : manages
+    `contract5501 : Contract` --> `car2024 : Car`               : rents
+    `contract5501 : Contract` --> `payment9901 : Payment`       : paid via

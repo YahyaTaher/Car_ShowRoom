@@ -1,0 +1,186 @@
+%% ============================================================
+%%  Car Rental Management System – Class Diagram
+%% ============================================================
+classDiagram
+    direction TB
+
+    %% ── User hierarchy ────────────────────────────────────
+    class User {
+        +Long id
+        +String name
+        +String email
+        +String password
+        +String phone
+        +Role role
+        +Date createdAt
+        +login() bool
+        +logout() void
+        +updateProfile() void
+    }
+
+    class Role {
+        +Long id
+        +String name (ADMIN, EMPLOYEE, CUSTOMER)
+        +String description
+    }
+
+    class Customer {
+        +Long id
+        +String licenseNumber
+        +String address
+        +List~Contract~ rentals
+        +browseAvailableCars() List~Car~
+        +createRentalContract(carId, dates) Contract
+        +makePayment(contract) Payment
+        +viewRentalHistory() List~Contract~
+        +cancelRental(contractId) void
+    }
+
+    class Employee {
+        +Long id
+        +String employeeId
+        +String department
+        +double salary
+        +Date hireDate
+        +Branch branch
+        +manageCarFleet() void
+        +registerNewCar(carDetails) Car
+        +updateCarStatus(carId, status) void
+        +createContract(customer, car, dates) Contract
+    }
+
+    class Admin {
+        +Long id
+        +manageEmployees() void
+        +viewReports() Report
+        +manageBranches() void
+        +configureSystem() void
+        +viewAllContracts() List~Contract~
+    }
+
+    %% ── Branch ────────────────────────────────────────────
+    class Branch {
+        +Long id
+        +String name
+        +String location
+        +String phone
+        +List~Car~ cars
+        +List~Employee~ staff
+        +addCar(car) void
+        +removeCar(carId) void
+    }
+
+    %% ── Car & Status ──────────────────────────────────────
+    class Car {
+        +Long id
+        +String plateNumber
+        +String brand
+        +String model
+        +Integer year
+        +BigDecimal pricePerDay
+        +CarStatus status
+        +Branch branch
+        +List~Contract~ contracts
+        +getDetails() String
+        +isAvailable() bool
+        +updateStatus(status) void
+        +calculateRentalCost(days) BigDecimal
+    }
+
+    class CarStatus {
+        <<enumeration>>
+        AVAILABLE
+        RENTED
+        MAINTENANCE
+        RESERVED
+    }
+
+    %% ── Contract & Payment ────────────────────────────────
+    class Contract {
+        +Long id
+        +Customer customer
+        +Car car
+        +Employee employee
+        +LocalDateTime startTime
+        +LocalDateTime endTime
+        +BigDecimal totalPrice
+        +ContractStatus status
+        +getContractDuration() Integer
+        +calculateCost() BigDecimal
+        +updateStatus(status) void
+    }
+
+    class ContractStatus {
+        <<enumeration>>
+        PENDING
+        ACTIVE
+        COMPLETED
+        CANCELLED
+        OVERDUE
+    }
+
+    class Payment {
+        +Long id
+        +Contract contract
+        +BigDecimal amount
+        +String method
+        +String transactionId
+        +LocalDateTime paymentDate
+        +String status
+        +processPayment() bool
+        +refund() bool
+        +getReceipt() String
+    }
+
+    %% ── Report ────────────────────────────────────────────
+    class Report {
+        +Long id
+        +String type
+        +LocalDateTime generatedAt
+        +String generatedBy
+        +generate() Data
+        +export(format) File
+    }
+
+    %% ── Relationships ─────────────────────────────────────
+    User <|-- Customer : inherits
+    User <|-- Employee : inherits
+    User <|-- Admin : inherits
+
+    User --> Role : has
+
+    Employee --> Branch : works at
+    Admin --> Employee : manages
+
+    Branch --> Car : contains
+    Car --> CarStatus : has status
+    
+    Customer --> Contract : creates
+    Employee --> Contract : processes
+    Car --> Contract : for rent
+    Contract --> ContractStatus : has status
+    
+    Contract --> Payment : has
+    
+    Admin --> Report : generates
+
+    %% ── Relationships ─────────────────────────────────────
+    User <|-- Customer       : extends
+    User <|-- Employee       : extends
+    Employee <|-- Admin      : extends
+
+    Customer "1" --> "0..*" Order        : places
+    Customer "1" --> "0..*" TestDrive    : schedules
+
+    Order "1" --> "1" Car                : includes
+    Order "1" --> "1" Invoice            : generates
+    Order "1" --> "1" Payment            : paid via
+
+    Inventory "1" *-- "0..*" Car         : contains
+    Employee "1" --> "1" Inventory       : manages
+
+    Discount "0..*" --> "1" Car          : applied to
+    Admin "1" --> "0..*" Report          : generates
+    Admin "1" --> "0..*" Discount        : creates
+
+    TestDrive "1" --> "1" Car            : for

@@ -1,0 +1,67 @@
+%% ============================================================
+%%  Car Rental Management System – Timing Diagram
+%%  Shows state changes of key entities over time during
+%%  a complete car rental contract transaction
+%% ============================================================
+%%  NOTE: Render with Mermaid v10.3+ for full timing support
+%% ============================================================
+%%{init: {"theme": "default"}}%%
+timeline
+    title Car Rental – Contract Timeline
+
+    section 🔐 Authentication Phase
+        T+0s  : Customer opens rental portal
+              : System serves login page
+        T+5s  : Customer submits credentials
+              : Auth Service validates JWT
+        T+6s  : Session established - Customer logged in
+
+    section Search and Selection Phase
+        T+10s : Customer browses available cars
+              : CarService queries Database
+        T+12s : Car listings rendered
+        T+20s : Customer applies filters (Brand, Model, Branch)
+              : Filtered results returned
+        T+30s : Customer opens car detail page
+              : Daily rate displayed
+        T+35s : Car detail page displayed
+
+    section Rental Date Selection Phase
+        T+40s  : Customer selects pickup date
+               : System checks availability calendar
+        T+42s  : Customer selects return date
+               : System calculates rental duration
+        T+45s  : Available date range confirmed
+               : System displays daily rate and total cost
+        T+50s  : Customer reviews rental estimate
+
+    section Contract Creation Phase
+        T+60s  : Customer clicks Rent Now
+               : Contract Service creates draft contract
+        T+62s  : Car status reserved (temp hold - 15 min)
+        T+65s  : Contract summary displayed to customer
+               : Total rental cost shown
+
+    section Payment Phase
+        T+70s  : Customer enters payment details
+               : Payment Service calls Payment Gateway
+        T+73s  : Gateway processes card
+        T+75s  : Payment approved - Transaction ID returned
+        T+76s  : Contract status = ACTIVE
+               : Car status updated to RENTED
+
+    section Post-Booking Phase
+        T+77s  : Confirmation email triggered
+               : Sent to customer email (async)
+        T+78s  : Notification Service sends booking details
+               : Customer sees success screen
+        T+80s  : Contract activated and saved to history
+               : Customer receives booking reference
+
+    section Rental Period
+        T+86400s   : Pickup day - Customer arrives for pickup
+                   : Employee verifies contract and releases car
+        T+432000s  : Return day - Customer returns car
+                    : Employee inspects car and closes contract
+        T+432100s  : Final status updated to COMPLETED
+                   : Final invoice generated with any late fees

@@ -1,0 +1,71 @@
+%% ============================================================
+%%  Car Rental Management System – Deployment Diagram
+%% ============================================================
+graph TB
+    subgraph User_Devices["👥 User Devices"]
+        BROWSER["🌐 Web Browser\nChrome / Firefox / Safari\n(HTML + CSS + JS)"]
+        MOBILE["📱 Mobile Device\n(Optional PWA)"]
+    end
+
+    subgraph CDN["☁️ CDN (Content Delivery Network)"]
+        CDN_NODE["Static Assets\n(JS bundles, CSS, images)"]
+    end
+
+    subgraph Cloud_Infra["☁️ Cloud Infrastructure (AWS / Azure / GCP)"]
+
+        subgraph DMZ["🔀 DMZ / Entry Layer"]
+            LB["Load Balancer\n(Nginx / AWS ALB)"]
+            WAF["Web Application Firewall\n(AWS WAF)"]
+        end
+
+        subgraph App_Servers["⚙️ Application Server Cluster"]
+            APP1["Spring Boot Server 1\nJava\n:8080"]
+            APP2["Spring Boot Server 2\nJava\n:8080"]
+        end
+
+        subgraph Auth_Server["🔐 Auth Server"]
+            AUTH["Auth Service\n(JWT)\n:4000"]
+        end
+
+        subgraph DB_Cluster["🗄️ Database Cluster"]
+            DB_PRIMARY[("Primary DB\nMySQL / PostgreSQL\n:5432")]
+            DB_REPLICA[("Read Replica\nMySQL / PostgreSQL\n:5432")]
+            REDIS[("Redis Cache\n:6379")]
+        end
+
+        subgraph Monitoring["📊 Monitoring & Logging"]
+            MONITOR["Prometheus + Grafana\nSystem Monitoring"]
+            LOGS["ELK Stack\nLog Aggregation"]
+        end
+    end
+
+    subgraph External_Services["🌐 External Services"]
+        PAY["💳 Payment Gateway\n(Stripe API)"]
+        EMAIL["📧 Email Service\n(SendGrid)"]
+    end
+
+    %% Connections
+    BROWSER -->|HTTPS :443| WAF
+    MOBILE  -->|HTTPS :443| WAF
+    BROWSER -->|Static files| CDN_NODE
+
+    WAF --> LB
+    LB --> APP1
+    LB --> APP2
+
+    APP1 --> AUTH
+    APP2 --> AUTH
+
+    APP1 -->|Read/Write| DB_PRIMARY
+    APP2 -->|Read/Write| DB_PRIMARY
+    DB_PRIMARY -->|Replication| DB_REPLICA
+    APP1 -->|Cache Lookup| REDIS
+    APP2 -->|Cache Lookup| REDIS
+
+    APP1 -->|HTTPS| PAY
+    APP1 -->|HTTPS| EMAIL
+
+    APP1 -.->|Metrics| MONITOR
+    APP2 -.->|Metrics| MONITOR
+    APP1 -.->|Logs| LOGS
+    APP2 -.->|Logs| LOGS

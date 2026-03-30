@@ -1,0 +1,97 @@
+%% ============================================================
+%%  Car Rental Management System – Use Case Diagram
+%% ============================================================
+graph TB
+    %% Actors
+    Customer(["👤 Customer"])
+    Employee(["👤 Employee / Staff"])
+    Admin(["👤 Admin / Manager"])
+    System(["🖥️ System"])
+
+    subgraph Car_Rental_System ["🚗 Car Rental Management System"]
+
+        %% Customer use cases
+        UC1["Register / Login"]
+        UC2["Browse Available Cars"]
+        UC3["Search & Filter Cars"]
+        UC4["View Car Details & Pricing"]
+        UC5["Create Rental Contract"]
+        UC6["Select Pickup & Return Dates"]
+        UC7["Make Payment"]
+        UC8["View Rental History"]
+        UC9["Cancel Rental Contract"]
+        UC10["Rate & Review Car"]
+
+        %% Employee use cases
+        UC11["Login"]
+        UC12["Manage Car Fleet"]
+        UC13["Register New Car"]
+        UC14["Update Car Status"]
+        UC15["Create Rental Contract"]
+        UC16["Process Payment"]
+        UC17["Check Car Availability"]
+        UC18["Manage Car Maintenance"]
+
+        %% Admin use cases
+        UC19["Manage Employees"]
+        UC20["View Rental Reports"]
+        UC21["Manage Branches"]
+        UC22["View System Reports"]
+        UC23["Access All Contracts"]
+        UC24["Generate Financial Reports"]
+        UC25["Monitor Fleet Status"]
+
+        %% System automated use cases
+        UC26["Send Confirmation Email"]
+        UC27["Update Car Availability"]
+        UC28["Calculate Rental Cost"]
+        UC29["Send Reminder Notifications"]
+    end
+
+    %% Customer associations
+    Customer --> UC1
+    Customer --> UC2
+    Customer --> UC3
+    Customer --> UC4
+    Customer --> UC5
+    Customer --> UC6
+    Customer --> UC7
+    Customer --> UC8
+    Customer --> UC9
+    Customer --> UC10
+
+    %% Employee associations
+    Employee --> UC11
+    Employee --> UC12
+    Employee --> UC13
+    Employee --> UC14
+    Employee --> UC15
+    Employee --> UC16
+    Employee --> UC17
+    Employee --> UC18
+
+    %% Admin associations (includes employee capabilities)
+    Admin --> UC11
+    Admin --> UC12
+    Admin --> UC19
+    Admin --> UC20
+    Admin --> UC21
+    Admin --> UC22
+    Admin --> UC23
+    Admin --> UC24
+    Admin --> UC25
+
+    %% System auto-triggers
+    UC5 --> UC26
+    UC5 --> UC27
+    UC6 --> UC28
+    UC7 --> UC26
+    UC9 --> UC27
+    System --> UC26
+    System --> UC29
+
+    %% Include / extend relationships
+    UC5 -.->|"«include»"| UC6
+    UC5 -.->|"«include»"| UC7
+    UC3 -.->|"«extend»"| UC2
+    UC28 -.->|"«extend»"| UC6

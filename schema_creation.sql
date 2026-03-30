@@ -59,7 +59,7 @@ create table car_color(
     color_id int not null,
     primary key (car_id,color_id),
     foreign key (car_id) references Car(car_id),
-    foreign key (color_id) references Color(color_id)
+    foreign key (color_id) references color(color_id)
 );
 
 create table job(
@@ -151,7 +151,7 @@ create table Contract(
     method_id  int not null,
     car_price_id int not null,
     contract_date date not null,
-    foreign key (car_id) references car(car_id),
+    foreign key (car_id) references Car(car_id),
     foreign key (branch_id) references Branch(branch_id),
     foreign key (EMP_SSN) references employee(SSN),
     foreign key (CUST_SSN) references customer(SSN),

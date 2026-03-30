@@ -1,0 +1,66 @@
+%% ============================================================
+%%  Car Rental Management System – Component Diagram
+%% ============================================================
+graph TB
+    subgraph Client["🖥️ Client Layer"]
+        WEB["Web Browser\n(HTML + CSS + JavaScript)"]
+        MOB["Mobile App\n(Optional PWA)"]
+    end
+
+    subgraph API_Gateway["🔀 API Gateway / Router"]
+        GW["REST API Gateway\n(/api/cars, /api/contracts)"]
+        AUTH_MW["Auth Middleware\n(JWT Validation)"]
+    end
+
+    subgraph Backend["⚙️ Backend Services (Application Layer)"]
+        AUTH_SVC["🔐 Auth Service\n─────────────\n• register()\n• login()\n• refreshToken()"]
+        CAR_SVC["🚗 Car Service\n─────────────\n• listAvailableCars()\n• getCarById()\n• registerCar()\n• updateCarStatus()"]
+        CONTRACT_SVC["📋 Contract Service\n─────────────\n• createContract()\n• confirmContract()\n• cancelContract()\n• getRentalHistory()"]
+        PAYMENT_SVC["💳 Payment Service\n─────────────\n• processPayment()\n• refund()\n• getReceipt()"]
+        BRANCH_SVC["🏢 Branch Service\n─────────────\n• listBranches()\n• getBranchDetails()\n• manageBranch()"]
+        NOTIFICATION_SVC["📧 Notification Service\n─────────────\n• sendConfirmationEmail()\n• sendRenewalReminder()"]
+        REPORT_SVC["📈 Report Service\n─────────────\n• rentalReport()\n• fleetReport()\n• financialReport()"]
+    end
+
+    subgraph External["🌐 External Integrations"]
+        PAY_GW["Payment Gateway\n(Stripe / PayPal)"]
+        EMAIL_PROV["Email Provider\n(SendGrid / SMTP)"]
+    end
+
+    subgraph DataLayer["🗄️ Data Layer"]
+        MAIN_DB[("Database\nMySQL / PostgreSQL")]
+        CACHE[("Cache\nRedis")]
+    end
+
+    %% Client to Gateway
+    WEB -->|HTTPS REST| GW
+    MOB -->|HTTPS REST| GW
+
+    %% Gateway to Middleware & Services
+    GW --> AUTH_MW
+    AUTH_MW --> AUTH_SVC
+    AUTH_MW --> CAR_SVC
+    AUTH_MW --> CONTRACT_SVC
+    AUTH_MW --> PAYMENT_SVC
+    AUTH_MW --> BRANCH_SVC
+    AUTH_MW --> REPORT_SVC
+
+    %% Service inter-dependencies
+    CONTRACT_SVC --> CAR_SVC
+    CONTRACT_SVC --> PAYMENT_SVC
+    CONTRACT_SVC --> NOTIFICATION_SVC
+    PAYMENT_SVC --> NOTIFICATION_SVC
+    CAR_SVC --> BRANCH_SVC
+
+    %% External calls
+    PAYMENT_SVC -->|API Call| PAY_GW
+    NOTIFICATION_SVC -->|SMTP / API| EMAIL_PROV
+
+    %% Data access
+    AUTH_SVC --> MAIN_DB
+    CAR_SVC --> MAIN_DB
+    CAR_SVC --> CACHE
+    CONTRACT_SVC --> MAIN_DB
+    PAYMENT_SVC --> MAIN_DB
+    BRANCH_SVC --> MAIN_DB
+    REPORT_SVC --> MAIN_DB

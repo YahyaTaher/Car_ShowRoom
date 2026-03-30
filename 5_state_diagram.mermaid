@@ -1,0 +1,61 @@
+%% ============================================================
+%%  Car Rental Management System – State Diagram
+%%  Entity: Contract / Rental Lifecycle
+%% ============================================================
+stateDiagram-v2
+    [*] --> CarBrowsing : Customer visits portal
+
+    CarBrowsing --> CarSelected : Customer selects a car
+    CarSelected --> DatesPicked : Customer picks rental dates
+    DatesPicked --> PriceVerified : System calculates rental cost
+
+    PriceVerified --> ContractDraft : Customer initiates booking
+    ContractDraft --> PendingPayment : Customer confirms contract
+    ContractDraft --> Abandoned : Customer cancels booking
+
+    PendingPayment --> PaymentProcessing : Payment submitted
+    PaymentProcessing --> PaymentFailed : Gateway rejection / error
+    PaymentFailed --> PendingPayment : Customer retries
+    PaymentFailed --> Abandoned : Customer gives up
+
+    PaymentProcessing --> PaymentSuccessful : Transaction approved
+
+    PaymentSuccessful --> ContractActive : Contract activated ✅
+    ContractActive --> RentalInProgress : Pickup completed
+    
+    RentalInProgress --> ReturnScheduled : Return date approaching
+    ReturnScheduled --> Completed : Vehicle returned
+    Completed --> ReceiptGenerated : Confirmation generated
+    ReceiptGenerated --> [*]
+
+    ContractActive --> EarlyReturn : Customer returns car early
+    EarlyReturn --> ReceiptGenerated
+
+    RentalInProgress --> OverdueAlert : Return date passed
+    OverdueAlert --> Overdue : Vehicle not returned
+    Overdue --> ReceiptGenerated : Late fees calculated
+
+    ContractActive --> CancellationRequested : Customer requests cancellation
+    CancellationRequested --> CancellationApproved : Admin approves
+    CancellationApproved --> Refund : Refund processed
+    CancellationRequested --> CancellationRejected : Admin rejects
+    CancellationRejected --> ContractActive
+
+    Refund --> [*]
+    Abandoned --> [*]
+    CancellationRejected --> [*]
+
+    note right of PaymentProcessing
+        Calls external payment gateway.
+        Timeout after 60 seconds.
+    end note
+
+    note right of ContractActive
+        Car is now rented. Status updated to RENTED.
+        Reminder emails sent to customer.
+    end note
+
+    note right of Overdue
+        Late fees may apply based on
+        rental agreement terms.
+    end note
