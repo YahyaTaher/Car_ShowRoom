@@ -22,11 +22,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         User user = userRepository.findByUsername(username)
             .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
 
-        // Role is now a JPA entity with a name property
-        String roleName = user.getRole().getName();
-        if (!roleName.startsWith("ROLE_")) {
-            roleName = "ROLE_" + roleName;
-        }
+String roleName = "ROLE_USER";
 
         return org.springframework.security.core.userdetails.User.builder()
             .username(user.getUsername())

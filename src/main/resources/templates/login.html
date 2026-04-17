@@ -14,7 +14,7 @@
         <div class="card" style="max-width: 400px; margin: 4rem auto;">
             <h2 style="text-align: center; margin-bottom: 2rem;">Welcome Back</h2>
             <p style="text-align: center; font-size: 0.9rem; color: #777; margin-bottom: 2rem;">
-                This UI maps to <strong> User Login</strong>, authenticating users based on roles stored in the database.
+                This UI maps to <strong> User Login</strong>.
             </p>
             
             <div id="alert-error" class="alert alert-error"></div>
@@ -47,16 +47,8 @@
             // In a real app, this calls login({ username, password }) from auth.js
             console.log('Logging in with:', { username, password });
             
-            // Simulate role-based redirect for demo purposes
-            if (username === 'admin') {
-                localStorage.setItem('car_rental_user', JSON.stringify({ username: 'admin' }));
-                localStorage.setItem('car_rental_role', 'Admin');
-                window.location.href = '/dashboard';
-            } else {
-                localStorage.setItem('car_rental_user', JSON.stringify({ username: username }));
-                localStorage.setItem('car_rental_role', 'Customer');
-                window.location.href = '/cars';
-            }
+            localStorage.setItem('car_rental_user', JSON.stringify({ username: username }));
+            window.location.href = '/cars';
         });
     </script>
 </body>

@@ -14,9 +14,7 @@ async function login(credentials) {
         const data = await response.json();
         localStorage.setItem('car_rental_user', JSON.stringify(data.user));
         localStorage.setItem('car_rental_token', data.token);
-        localStorage.setItem('car_rental_role', data.user.roleName);
-
-        window.location.href = data.user.roleName === 'Admin' ? '/dashboard' : '/cars';
+window.location.href = '/cars';
     } catch (error) {
         showAlert('alert-error', error.message);
     }

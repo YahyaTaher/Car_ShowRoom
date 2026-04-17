@@ -2,32 +2,22 @@
 const API_BASE_URL = 'http://localhost:8080/api';
 
 /**
- * Common Header Component with Role-based Navigation
+ * Common Header Component 
  */
 function updateNavbar() {
     const navbar = document.getElementById('main-nav');
     if (!navbar) return;
 
     const user = JSON.parse(localStorage.getItem('car_rental_user'));
-    const role = localStorage.getItem('car_rental_role');
 
     let navLinks = '';
 
     if (user) {
-        if (role === 'Admin') {
-            navLinks = `
-                <li><a href="/dashboard">Dashboard</a></li>
-                <li><a href="/dashboard">Inventory</a></li>
-                <li><a href="/dashboard">Branches</a></li>
-                <li><a href="/dashboard">Staff</a></li>
-            `;
-        } else if (role === 'Customer') {
-            navLinks = `
-                <li><a href="/cars">Search Cars</a></li>
-                <li><a href="/cars">My Rentals</a></li>
-            `;
-        }
-        navLinks += `<li><a href="#" id="logout-btn">Logout (${user.username})</a></li>`;
+        navLinks = `
+            <li><a href="/cars">Search Cars</a></li>
+            <li><a href="/rent">Rentals</a></li>
+        `;
+        navLinks += `<li><a href="#" id="logout-btn">Logout (${user.username || user.name})</a></li>`;
     } else {
         navLinks = `
             <li><a href="/login">Login</a></li>
@@ -36,7 +26,7 @@ function updateNavbar() {
     }
 
     navbar.innerHTML = `
-        <a href="/" class="logo">CarRental Pro</a>
+        <a href="/" class="logo">Car Showroom</a>
         <ul class="nav-links">
             ${navLinks}
         </ul>
@@ -67,3 +57,4 @@ function showAlert(id, message) {
 document.addEventListener('DOMContentLoaded', () => {
     updateNavbar();
 });
+

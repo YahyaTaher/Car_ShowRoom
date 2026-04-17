@@ -2,7 +2,7 @@ package com.carshowroom.mycar_showroom.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -35,7 +35,7 @@ public class JwtUtil {
             .subject(userDetails.getUsername())
             .issuedAt(new Date())
             .expiration(new Date(System.currentTimeMillis() + expirationMs))
-            .signWith(getSigningKey(), SignatureAlgorithm.HS512)
+            .signWith(getSigningKey())
             .compact();
     }
 

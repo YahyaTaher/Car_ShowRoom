@@ -2,7 +2,6 @@ package com.carshowroom.mycar_showroom.controller;
 
 import com.carshowroom.mycar_showroom.entity.User;
 import com.carshowroom.mycar_showroom.entity.Customer;
-import com.carshowroom.mycar_showroom.entity.Role;
 import com.carshowroom.mycar_showroom.security.JwtUtil;
 import com.carshowroom.mycar_showroom.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,30 +46,19 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
         try {
-            // Check if user already exists
             if (authService.userExists(request.getUsername())) {
                 return ResponseEntity.badRequest().body("Username already exists");
             }
 
-            // Create Customer
             Customer customer = new Customer();
             customer.setFullName(request.getFullName());
             customer.setEmail(request.getEmail());
             customer.setPhone(request.getPhone());
             customer = authService.saveCustomer(customer);
 
-            // Get or create CUSTOMER role
-            Role customerRole = authService.getRoleByName("CUSTOMER");
-            if (customerRole == null) {
-                customerRole = new Role("CUSTOMER");
-                customerRole = authService.saveRole(customerRole);
-            }
-
-            // Create User
             User user = new User();
             user.setUsername(request.getUsername());
             user.setPassword(passwordEncoder.encode(request.getPassword()));
-            user.setRole(customerRole);
             user.setCustomer(customer);
             user = authService.saveUser(user);
 
@@ -135,3 +123,4 @@ class LoginResponse {
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }
 }
+

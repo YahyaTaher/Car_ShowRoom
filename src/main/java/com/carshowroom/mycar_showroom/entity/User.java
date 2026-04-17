@@ -12,9 +12,7 @@ public class User {
     private String username;
     private String password;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "role_id")
-    private Role role;
+
 
     @OneToOne(mappedBy = "user")
     private Customer customer;
@@ -22,10 +20,9 @@ public class User {
     // Constructors
     public User() {}
 
-    public User(String username, String password, Role role, Customer customer) {
+public User(String username, String password, Customer customer) {
         this.username = username;
         this.password = password;
-        this.role = role;
         this.customer = customer;
     }
 
@@ -39,8 +36,7 @@ public class User {
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
 
-    public Role getRole() { return role; }
-    public void setRole(Role role) { this.role = role; }
+
 
     public Customer getCustomer() { return customer; }
     public void setCustomer(Customer customer) { this.customer = customer; }
@@ -50,7 +46,6 @@ public class User {
         return "User{" +
                 "id=" + id +
                 ", username='" + username + '\'' +
-                ", role=" + (role != null ? role.getName() : null) +
-                '}';
+                '}'; 
     }
 }
