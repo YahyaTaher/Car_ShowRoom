@@ -33,10 +33,10 @@ async function login(credentials) {
 
         const data = await response.json();
         if (data.success) {
-            localStorage.setItem('car_showroom_user', JSON.stringify({ username: data.data.username }));
+            localStorage.setItem('car_showroom_user', JSON.stringify({ username: data.data.username, role: data.data.role }));
             localStorage.setItem('car_showroom_token', data.data.token);
-            // Redirect based on role if needed, or just to dashboard
-            window.location.href = data.data.username === 'admin' ? '/dashboard' : '/cars';
+            // Redirect based on role
+            window.location.href = data.data.role === 'ROLE_ADMIN' ? '/dashboard' : '/cars';
         } else {
             throw new Error(data.message || 'Login failed');
         }

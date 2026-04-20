@@ -28,18 +28,19 @@ public class CarService {
     @Autowired
     private AuditService auditService;
 
+    @Transactional
     public List<Map<String, Object>> searchCars(String company, String model, String color, String branch) {
         List<Car> cars = carRepository.findAvailableCars();
         
         List<Car> filtered = cars.stream().filter(car -> {
             boolean matches = true;
-            if (company != null && !car.getBrand().equalsIgnoreCase(company)) {
+            if (company != null && !company.isBlank() && !car.getBrand().equalsIgnoreCase(company)) {
                 matches = false;
             }
-            if (model != null && !car.getModel().equalsIgnoreCase(model)) {
+            if (model != null && !model.isBlank() && !car.getModel().equalsIgnoreCase(model)) {
                 matches = false;
             }
-            if (branch != null && (car.getBranch() == null || !car.getBranch().getName().equalsIgnoreCase(branch))) {
+            if (branch != null && !branch.isBlank() && (car.getBranch() == null || !car.getBranch().getName().equalsIgnoreCase(branch))) {
                 matches = false;
             }
             return matches;
@@ -59,10 +60,12 @@ public class CarService {
         }).collect(Collectors.toList());
     }
 
+    @Transactional
     public List<Car> getAvailableCars() {
         return carRepository.findAvailableCars();
     }
 
+    @Transactional
     public Car getCarById(Long id) {
         return carRepository.findById(id).orElse(null);
     }

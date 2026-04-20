@@ -12,7 +12,7 @@ public class User {
     private String username;
     private String password;
 
-
+    private String role; // e.g., "ROLE_CUSTOMER" or "ROLE_ADMIN"
 
     @OneToOne(mappedBy = "user")
     private Customer customer;
@@ -20,10 +20,17 @@ public class User {
     // Constructors
     public User() {}
 
-public User(String username, String password, Customer customer) {
+    public User(String username, String password, Customer customer) {
         this.username = username;
         this.password = password;
         this.customer = customer;
+        this.role = "ROLE_CUSTOMER"; // Default role
+    }
+
+    public User(String username, String password, String role) {
+        this.username = username;
+        this.password = password;
+        this.role = role;
     }
 
     // Getters and Setters
@@ -36,7 +43,8 @@ public User(String username, String password, Customer customer) {
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
 
-
+    public String getRole() { return role; }
+    public void setRole(String role) { this.role = role; }
 
     public Customer getCustomer() { return customer; }
     public void setCustomer(Customer customer) { this.customer = customer; }

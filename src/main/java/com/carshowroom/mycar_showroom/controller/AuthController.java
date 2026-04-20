@@ -38,7 +38,8 @@ public class AuthController {
                 new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
             );
             String token = jwtUtil.generateToken(authentication);
-            LoginResponse response = new LoginResponse(token, request.getUsername());
+            String role = authentication.getAuthorities().iterator().next().getAuthority();
+            LoginResponse response = new LoginResponse(token, request.getUsername(), role);
             return ResponseEntity.ok(ResponseWrapper.success("Login successful", response));
         } catch (AuthenticationException e) {
             return ResponseEntity.ok(ResponseWrapper.error("Invalid credentials"));
@@ -61,6 +62,7 @@ public class AuthController {
             User user = new User();
             user.setUsername(request.getUsername());
             user.setPassword(passwordEncoder.encode(request.getPassword()));
+            user.setRole("ROLE_CUSTOMER"); // Set role
             user.setCustomer(customer);
             user = authService.saveUser(user);
             
@@ -118,15 +120,19 @@ class RegisterRequest {
 class LoginResponse {
     private String token;
     private String username;
+    private String role;
     
-    public LoginResponse(String token, String username) {
+    public LoginResponse(String token, String username, String role) {
         this.token = token;
         this.username = username;
+        this.role = role;
     }
     
     public String getToken() { return token; }
     public void setToken(String token) { this.token = token; }
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }
+    public String getRole() { return role; }
+    public void setRole(String role) { this.role = role; }
 }
 

@@ -13,11 +13,17 @@ function updateNavbar() {
     let navLinks = '';
 
     if (user) {
-        navLinks = `
-            <li><a href="/cars">Search Cars</a></li>
-            <li><a href="/purchase">Purchases</a></li>
-            <li><a href="/dashboard">Dashboard</a></li>
-        `;
+        if (user.role === 'ROLE_ADMIN') {
+            navLinks = `
+                <li><a href="/dashboard">Dashboard</a></li>
+                <li><a href="/cars">Manage Inventory</a></li>
+            `;
+        } else {
+            navLinks = `
+                <li><a href="/cars">Search Cars</a></li>
+                <li><a href="/purchase">My Purchases</a></li>
+            `;
+        }
         navLinks += `<li><a href="#" id="logout-btn">Logout (${user.username})</a></li>`;
     } else {
         navLinks = `
