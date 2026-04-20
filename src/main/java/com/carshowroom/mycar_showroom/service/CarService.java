@@ -75,6 +75,7 @@ public class CarService {
         car.setBrand(dto.getBrand());
         car.setModel(dto.getModel());
         car.setYear(dto.getYear());
+        car.setPrice(dto.getPrice());
         car.setBranch(branch);
         car.setStatus(CarStatus.AVAILABLE);
         carRepository.save(car);

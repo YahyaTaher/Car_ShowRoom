@@ -13,7 +13,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "*")
+// @CrossOrigin(origins = "*") - Handled by global CORS in SecurityConfig
 public class CarsController {
 
     @Autowired

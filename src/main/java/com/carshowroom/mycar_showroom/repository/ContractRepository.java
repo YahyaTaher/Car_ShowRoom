@@ -20,9 +20,6 @@ public interface ContractRepository extends JpaRepository<Contract, Long> {
     @Query("SELECT SUM(c.totalPrice) FROM Contract c WHERE c.status = 'COMPLETED'")
     java.math.BigDecimal sumTotalRevenue();
     
-  @Query("SELECT COUNT(c) FROM Contract c WHERE c.createdAt >= :since")
-    long countRecentContracts(@Param("since") LocalDateTime since);
-
-    @Query("SELECT COUNT(c) FROM Contract c WHERE c.status = :status")
+@Query("SELECT COUNT(c) FROM Contract c WHERE c.status = :status")
     long countByStatusParam(ContractStatus status);
 }

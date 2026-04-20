@@ -11,6 +11,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.http.HttpMethod;
+import java.util.Arrays;
 
 import java.util.List;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -37,14 +39,15 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .cors(cors -> cors.configurationSource(request -> {
                 CorsConfiguration config = new CorsConfiguration();
-                config.setAllowedOriginPatterns(List.of("*"));
+config.setAllowedOriginPatterns(Arrays.asList("http://localhost:8080", "http://127.0.0.1:8080"));
                 config.setAllowedMethods(List.of("*"));
                 config.setAllowedHeaders(List.of("*"));
                 config.setAllowCredentials(true);
                 return config;
             }))
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**", "/", "/index.html", "/login**", "/register**", "/cars**", "/rent**", "/search**", "/dashboard**", "/css/**", "/js/**", "/assets/**").permitAll()
+.authorizeHttpRequests(auth -> auth
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                .requestMatchers("/api/auth/**", "/", "/index.html", "/login**", "/register**", "/cars**", "/rent**", "/search**", "/dashboard**", "/css/**", "/js/**", "/assets/**", "/api/cars/**").permitAll()
                 .anyRequest().authenticated()
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

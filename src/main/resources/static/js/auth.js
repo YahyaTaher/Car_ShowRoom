@@ -3,12 +3,20 @@
  */
 function getAuthHeaders() {
     const token = localStorage.getItem('car_showroom_token');
+
     const headers = {
         'Content-Type': 'application/json'
     };
-    if (token) {
+
+    if (
+        token &&
+        token !== 'null' &&
+        token !== 'undefined' &&
+        token.trim() !== ''
+    ) {
         headers['Authorization'] = `Bearer ${token}`;
     }
+
     return headers;
 }
 

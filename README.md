@@ -64,31 +64,4 @@ This project is open-source and available for educational purposes.
 }
 ```
 
-## Browser Compatibility
-
-- Chrome (Recommended)
-- Firefox
-- Safari
-- Edge
-
-## Future Updates
-
-- [ ] Connect to real database
-- [ ] Add login system
-- [ ] Performance improvements
-- [ ] More 3D effects
-- [ ] Multi-language support
-
-## Contact
-
-For any inquiries or suggestions, please contact us:
-
-- Email: <info@carshowroom.com>
-- Phone: +20 123 456 789
-
-***
-
-**Note**: This project is frontend and backend now.
-
-> > > > > > > 1e825f0b9681f04db0b2f8d795974abd044696f5
 

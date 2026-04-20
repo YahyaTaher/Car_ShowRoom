@@ -26,10 +26,8 @@ public class DashboardService {
         
         long pendingContracts = contractRepository.countPendingContracts();
         
-        java.time.LocalDateTime lastWeek = java.time.LocalDateTime.now().minusDays(7);
-        long recentPurchases = contractRepository.countRecentContracts(lastWeek);
         return new DashboardStatsDTO((int) totalCars, (int) availableCars, (int) soldCars, 
-                                   totalRevenue.doubleValue(), (int) pendingContracts, (int) recentPurchases);
+                                   totalRevenue.doubleValue(), (int) pendingContracts, 0);
     }
 }
 
