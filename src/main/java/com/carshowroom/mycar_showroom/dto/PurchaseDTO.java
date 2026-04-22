@@ -7,11 +7,9 @@ public class PurchaseDTO {
     @Min(value = 1, message = "Car ID must be positive")
     private Long carId;
 
-    @NotBlank(message = "Customer name required")
     @Size(max = 100, message = "Name too long")
     private String customerName;
 
-    @NotBlank(message = "Phone required")
     @Pattern(regexp = "^[+]?[0-9]{10,15}$", message = "Invalid phone number")
     private String phone;
 

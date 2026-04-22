@@ -16,11 +16,20 @@ public class ContractsController {
     @Autowired
     private ContractService contractService;
 
+    @GetMapping("/my/contracts")
+    public ResponseEntity<ResponseWrapper<Object>> myContracts() {
+        try {
+            return ResponseEntity.ok(ResponseWrapper.success("Contracts retrieved", contractService.getMyContracts()));
+        } catch (Exception e) {
+            return ResponseEntity.ok(ResponseWrapper.error(e.getMessage()));
+        }
+    }
+
 @PostMapping("/purchases")
     public ResponseEntity<ResponseWrapper<Void>> createPurchase(@Valid @RequestBody PurchaseDTO request) {
         try {
             contractService.createPurchase(request);
-            return ResponseEntity.ok(ResponseWrapper.success("Purchase created successfully. Invoice generated."));
+            return ResponseEntity.ok(ResponseWrapper.success("Purchase request created successfully. Waiting for admin approval."));
         } catch (Exception e) {
             return ResponseEntity.ok(ResponseWrapper.error(e.getMessage()));
         }

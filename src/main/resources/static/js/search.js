@@ -1,3 +1,29 @@
+document.addEventListener('DOMContentLoaded', async () => {
+    await loadSearchOptions();
+});
+
+async function loadSearchOptions() {
+    try {
+        const options = await fetchDynamicOptions();
+        fillSelect(
+            document.getElementById('filter-company'),
+            options.companies || [],
+            (c) => c,
+            (c) => c,
+            'All Companies'
+        );
+        fillSelect(
+            document.getElementById('filter-branch'),
+            options.branches || [],
+            (b) => b.name,
+            (b) => `${b.name}${b.city ? `, ${b.city}` : ''}`,
+            'All Locations'
+        );
+    } catch (error) {
+        console.error('Failed to load search options:', error);
+    }
+}
+
 async function searchCars(filters) {
     const loading = document.getElementById('loading');
     const results = document.getElementById('car-results');
@@ -67,22 +93,23 @@ function renderCars(cars) {
     results.innerHTML = cars.map(car => `
         <div class="col-lg-4 col-md-6">
             <div class="card h-100 shadow-sm border-0 hover-lift">
-                <div class="card-body d-flex flex-column">
-                    <div class="text-center mb-3">
+                ${car.imageUrls && car.imageUrls.length > 0 ? `
+                    <img src="${car.imageUrls[0]}" class="card-img-top" alt="${car.brand} ${car.model}" style="height: 220px; object-fit: cover;">
+                ` : `
+                    <div class="text-center mt-4 mb-2">
                         <i class="fas fa-car-side fa-3x text-primary mb-2"></i>
                     </div>
+                `}
+                <div class="card-body d-flex flex-column">
                     <h5 class="card-title">${car.brand} ${car.model}</h5>
                     <p class="card-text text-muted mb-1">Year: ${car.year}</p>
                     <p class="card-text text-muted mb-3">📍 ${car.branchName || 'Main Branch'}</p>
+                    ${car.colors && car.colors.length > 0 ? `<p class="card-text text-muted mb-1">Colors: ${car.colors.join(', ')}</p>` : ''}
+                    ${typeof car.quantityAvailable === 'number' ? `<p class="card-text text-muted mb-3">Available: ${car.quantityAvailable}</p>` : ''}
                     <p class="fs-3 fw-bold text-success mb-4">$${Number(car.price || 0).toLocaleString()}</p>
-                    <button class="btn btn-primary w-100 mt-auto" onclick="openPurchaseModal(${car.id}, {
-                        brand: '${car.brand || ''}',
-                        model: '${car.model || ''}',
-                        year: ${car.year || ''},
-                        price: ${car.price || 0}
-                    })">
-                        <i class="fas fa-shopping-cart me-2"></i>Buy This Car
-                    </button>
+                    <a class="btn btn-primary w-100 mt-auto" href="/car-details?carId=${car.id}">
+                        <i class="fas fa-circle-info me-2"></i>View Details
+                    </a>
                 </div>
             </div>
         </div>

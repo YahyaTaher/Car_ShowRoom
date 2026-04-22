@@ -28,6 +28,11 @@ public class CarsController {
         return ResponseEntity.ok(ResponseWrapper.success("Cars retrieved successfully", cars));
     }
 
+    @GetMapping("/cars/{id}")
+    public ResponseEntity<ResponseWrapper<Map<String, Object>>> getCarById(@PathVariable Long id) {
+        return ResponseEntity.ok(ResponseWrapper.success("Car details retrieved successfully", carService.getCarDetails(id)));
+    }
+
     @PostMapping("/cars")
     public ResponseEntity<ResponseWrapper<Void>> addCar(@Valid @RequestBody CarDTO carDTO) {
         carService.addCar(carDTO);

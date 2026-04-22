@@ -70,6 +70,7 @@
 
     <script src="/js/api.js"></script>
     <script src="/js/auth.js"></script>
+    <script src="/js/options.js"></script>
     <script src="/js/rent.js"></script>
     <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -81,8 +82,24 @@
         const carId = urlParams.get('carId');
         if (carId) {
             document.getElementById('car-id').value = carId;
-            openPurchaseModal(carId, {});
         }
+
+        async function loadPaymentMethods() {
+            try {
+                const options = await fetchDynamicOptions();
+                fillSelect(
+                    document.getElementById('payment-method'),
+                    options.paymentMethods || [],
+                    (m) => m,
+                    (m) => m.replaceAll('_', ' ').replace(/\b\w/g, (ch) => ch.toUpperCase()),
+                    'Select Payment Method'
+                );
+            } catch (error) {
+                console.error('Failed to load payment methods:', error);
+            }
+        }
+
+        loadPaymentMethods();
 
         document.getElementById('purchase-form').addEventListener('submit', (e) => {
             e.preventDefault();

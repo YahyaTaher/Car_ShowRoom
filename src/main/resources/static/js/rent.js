@@ -37,17 +37,48 @@ function updatePurchaseSummary(car = {}) {
   if (!box) return;
 
   const price = Number(car.price || 0);
+  const qty = typeof car.quantityAvailable === 'number' ? car.quantityAvailable : null;
+  const colors = Array.isArray(car.colors) ? car.colors : [];
+  const isAvailable = qty === null ? true : qty > 0;
 
   box.innerHTML = `
     <div class="summary-item"><strong>Car:</strong> ${car.brand || '-'} ${car.model || ''} (${car.year || ''})</div>
     <div class="summary-item"><strong>Price:</strong> $${price.toLocaleString()}</div>
-    <div class="summary-item"><strong>Status:</strong> Available</div>
+    ${colors.length ? `<div class="summary-item"><strong>Colors:</strong> ${colors.join(', ')}</div>` : ''}
+    ${qty !== null ? `<div class="summary-item"><strong>Available:</strong> ${qty}</div>` : ''}
+    <div class="summary-item"><strong>Status:</strong> ${isAvailable ? 'Available' : 'Unavailable'}</div>
   `;
 }
 
 async function confirmPurchase() {
-  const modal = document.getElementById('purchase-modal');
-  const carId = modal?.getAttribute('data-car-id');
+  const token = localStorage.getItem('car_showroom_token');
+  if (!token || token === 'null' || token === 'undefined' || token.trim() === '') {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Login required',
+      text: 'Please login before making a purchase.'
+    }).then(() => {
+      window.location.href = '/login';
+    });
+    return;
+  }
+
+  // Read carId from the form input (populated from URL ?carId=X)
+  // Fall back to modal attribute if the input doesn't exist
+  const carIdInput = document.getElementById('car-id');
+  const rawCarId = carIdInput?.value?.trim()
+    || document.getElementById('purchase-modal')?.getAttribute('data-car-id');
+
+  if (!rawCarId) {
+    Swal.fire({ icon: 'error', title: 'Error', text: 'Car ID is missing. Please go back and select a car.' });
+    return;
+  }
+
+  const carId = parseInt(rawCarId, 10);
+  if (isNaN(carId)) {
+    Swal.fire({ icon: 'error', title: 'Error', text: 'Invalid car ID. Please go back and select a car.' });
+    return;
+  }
 
   const customerName = document.getElementById('customer-name')?.value.trim();
   const phone = document.getElementById('customer-phone')?.value.trim();
@@ -60,7 +91,7 @@ async function confirmPurchase() {
   }
 
   const payload = {
-    carId,
+    carId,          // FIX 2: now a number (Long), not a string
     customerName,
     phone,
     email,
@@ -83,21 +114,27 @@ async function confirmPurchase() {
 
     const response = await fetch(`${API_BASE_URL}/purchases`, {
       method: 'POST',
-      headers: getAuthHeaders(),
+      // FIX 3: ensure Content-Type is always set so Spring can parse @RequestBody
+      headers: {
+        'Content-Type': 'application/json',
+        ...getAuthHeaders()
+      },
       body: JSON.stringify(payload)
     });
+
+    // FIX 4: check HTTP status before parsing JSON to get a clear error message
+    if (!response.ok) {
+      const errBody = await response.json().catch(() => ({}));
+      throw new Error(errBody.message || `Server error: ${response.status}`);
+    }
 
     const data = await response.json();
     if (!data.success) throw new Error(data.message || 'Purchase failed');
 
     Swal.fire({
       icon: 'success',
-      title: 'Purchase Completed!',
-      html: `
-        <p><strong>Invoice #:</strong> ${data.invoiceNo || 'AUTO-GEN'}</p>
-        <p><strong>Customer:</strong> ${customerName}</p>
-        <p><strong>Status:</strong> Car Sold</p>
-      `
+      title: 'Purchase Submitted',
+      text: 'Your purchase contract is pending admin approval.'
     });
 
     document.getElementById('purchase-form')?.reset();
@@ -114,4 +151,3 @@ async function confirmPurchase() {
     }
   }
 }
-

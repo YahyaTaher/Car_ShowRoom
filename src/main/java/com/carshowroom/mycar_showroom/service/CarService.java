@@ -6,11 +6,11 @@ import com.carshowroom.mycar_showroom.entity.Car;
 import com.carshowroom.mycar_showroom.entity.CarStatus;
 import com.carshowroom.mycar_showroom.repository.BranchRepository;
 import com.carshowroom.mycar_showroom.repository.CarRepository;
-import com.carshowroom.mycar_showroom.service.AuditService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
@@ -56,6 +56,9 @@ public class CarService {
             dto.put("status", car.getStatus());
             dto.put("branchId", car.getBranch() != null ? car.getBranch().getId() : null);
             dto.put("branchName", car.getBranch() != null ? car.getBranch().getName() : "N/A");
+            dto.put("imageUrls", car.getImageUrls());
+            dto.put("colors", car.getColors());
+            dto.put("quantityAvailable", car.getQuantityAvailable());
             return dto;
         }).collect(Collectors.toList());
     }
@@ -71,16 +74,49 @@ public class CarService {
     }
 
     @Transactional
+    public Map<String, Object> getCarDetails(Long id) {
+        Car car = carRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Car not found"));
+        Map<String, Object> dto = new HashMap<>();
+        dto.put("id", car.getId());
+        dto.put("brand", car.getBrand());
+        dto.put("model", car.getModel());
+        dto.put("year", car.getYear());
+        dto.put("price", car.getPrice());
+        dto.put("status", car.getStatus());
+        dto.put("branchId", car.getBranch() != null ? car.getBranch().getId() : null);
+        dto.put("branchName", car.getBranch() != null ? car.getBranch().getName() : "N/A");
+        dto.put("imageUrls", car.getImageUrls());
+        dto.put("colors", car.getColors());
+        dto.put("quantityAvailable", car.getQuantityAvailable());
+        return dto;
+    }
+
+    @Transactional
     public void addCar(CarDTO dto) {
         Branch branch = branchRepository.findById(dto.getBranchId()).orElseThrow(() -> new IllegalArgumentException("Branch not found"));
         Car car = new Car();
-        car.setPlateNumber(dto.getPlateNumber());
         car.setBrand(dto.getBrand());
         car.setModel(dto.getModel());
         car.setYear(dto.getYear());
         car.setPrice(dto.getPrice());
+        List<String> cleanImageUrls = dto.getImageUrls() == null ? new ArrayList<>() :
+                dto.getImageUrls().stream()
+                        .filter(url -> url != null && !url.isBlank())
+                        .map(String::trim)
+                        .collect(Collectors.toList());
+        car.setImageUrls(cleanImageUrls);
+
+        List<String> cleanColors = dto.getColors() == null ? new ArrayList<>() :
+                dto.getColors().stream()
+                        .filter(c -> c != null && !c.isBlank())
+                        .map(String::trim)
+                        .collect(Collectors.toList());
+        car.setColors(cleanColors);
+
+        int qty = dto.getQuantityAvailable() == null ? 0 : Math.max(0, dto.getQuantityAvailable());
+        car.setQuantityAvailable(qty);
         car.setBranch(branch);
-        car.setStatus(CarStatus.AVAILABLE);
+        car.setStatus(qty > 0 ? CarStatus.AVAILABLE : CarStatus.UNAVAILABLE);
         carRepository.save(car);
         auditService.log("CREATE_CAR", "Car created: " + dto.getBrand() + " " + dto.getModel());
     }

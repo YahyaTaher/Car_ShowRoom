@@ -1,6 +1,5 @@
 package com.carshowroom.mycar_showroom.config;
 
-import com.carshowroom.mycar_showroom.security.CustomUserDetailsService;
 import com.carshowroom.mycar_showroom.security.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,8 +8,6 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.http.HttpMethod;
 import java.util.Arrays;
 
@@ -26,11 +23,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    private final CustomUserDetailsService userDetailsService;
 
-    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter, CustomUserDetailsService userDetailsService) {
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
-        this.userDetailsService = userDetailsService;
     }
 
     @Bean
@@ -47,7 +42,7 @@ config.setAllowedOriginPatterns(Arrays.asList("http://localhost:8080", "http://1
             }))
 .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .requestMatchers("/api/auth/**", "/", "/index.html", "/login**", "/register**", "/cars**", "/rent**", "/search**", "/dashboard**", "/css/**", "/js/**", "/assets/**", "/api/cars/**").permitAll()
+                .requestMatchers("/api/auth/**", "/", "/index.html", "/login**", "/register**", "/cars**", "/rent**", "/search**", "/purchase**", "/car-details**", "/dashboard**", "/css/**", "/js/**", "/assets/**", "/api/cars/**", "/api/options/**").permitAll()
                 .anyRequest().authenticated()
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

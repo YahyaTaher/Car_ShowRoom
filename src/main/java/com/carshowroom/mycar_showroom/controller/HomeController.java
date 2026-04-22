@@ -65,4 +65,9 @@ public class HomeController {
     public String purchase() {
         return "purchase";
     }
+
+    @GetMapping("/car-details")
+    public String carDetails() {
+        return "car-details";
+    }
 }

@@ -33,10 +33,11 @@ async function login(credentials) {
 
         const data = await response.json();
         if (data.success) {
-            localStorage.setItem('car_showroom_user', JSON.stringify({ username: data.data.username, role: data.data.role }));
+            const normalizedRole = (data.data.role || '').startsWith('ROLE_') ? data.data.role : `ROLE_${data.data.role || ''}`;
+            localStorage.setItem('car_showroom_user', JSON.stringify({ username: data.data.username, role: normalizedRole }));
             localStorage.setItem('car_showroom_token', data.data.token);
             // Redirect based on role
-            window.location.href = data.data.role === 'ROLE_ADMIN' ? '/dashboard' : '/cars';
+            window.location.href = normalizedRole === 'ROLE_ADMIN' ? '/dashboard' : '/cars';
         } else {
             throw new Error(data.message || 'Login failed');
         }

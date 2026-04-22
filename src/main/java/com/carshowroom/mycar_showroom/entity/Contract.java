@@ -2,7 +2,6 @@ package com.carshowroom.mycar_showroom.entity;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "contracts")
@@ -16,11 +15,19 @@ public class Contract {
     private Customer customer;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "car_id")
     private Car car;
 
     private String paymentMethod;
     private BigDecimal totalPrice;
+
+    private String customerNameSnapshot;
+    private String customerPhoneSnapshot;
+    private String customerEmailSnapshot;
 
     @Enumerated(EnumType.STRING)
     private ContractStatus status = ContractStatus.PENDING;
@@ -35,6 +42,9 @@ public class Contract {
     public Customer getCustomer() { return customer; }
     public void setCustomer(Customer customer) { this.customer = customer; }
 
+    public User getUser() { return user; }
+    public void setUser(User user) { this.user = user; }
+
     public Car getCar() { return car; }
     public void setCar(Car car) { this.car = car; }
 
@@ -44,6 +54,15 @@ public class Contract {
     public BigDecimal getTotalPrice() { return totalPrice; }
     public void setTotalPrice(BigDecimal totalPrice) { this.totalPrice = totalPrice; }
 
+    public String getCustomerNameSnapshot() { return customerNameSnapshot; }
+    public void setCustomerNameSnapshot(String customerNameSnapshot) { this.customerNameSnapshot = customerNameSnapshot; }
+
+    public String getCustomerPhoneSnapshot() { return customerPhoneSnapshot; }
+    public void setCustomerPhoneSnapshot(String customerPhoneSnapshot) { this.customerPhoneSnapshot = customerPhoneSnapshot; }
+
+    public String getCustomerEmailSnapshot() { return customerEmailSnapshot; }
+    public void setCustomerEmailSnapshot(String customerEmailSnapshot) { this.customerEmailSnapshot = customerEmailSnapshot; }
+
     public ContractStatus getStatus() { return status; }
     public void setStatus(ContractStatus status) { this.status = status; }
 
@@ -52,6 +71,7 @@ public class Contract {
         return "Contract{" +
                 "id=" + id +
                 ", customerId=" + (customer != null ? customer.getId() : null) +
+                ", userId=" + (user != null ? user.getId() : null) +
                 ", carId=" + (car != null ? car.getId() : null) +
                 ", totalPrice=" + totalPrice +
                 ", status=" + status +

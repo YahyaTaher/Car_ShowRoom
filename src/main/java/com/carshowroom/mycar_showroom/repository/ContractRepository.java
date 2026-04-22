@@ -13,6 +13,8 @@ import java.util.List;
 @Repository
 public interface ContractRepository extends JpaRepository<Contract, Long> {
     List<Contract> findByCustomerId(Long customerId);
+    List<Contract> findByUserId(Long userId);
+    List<Contract> findByStatus(ContractStatus status);
     
     @Query("SELECT COUNT(c) FROM Contract c WHERE c.status = 'PENDING'")
     long countPendingContracts();
@@ -22,4 +24,7 @@ public interface ContractRepository extends JpaRepository<Contract, Long> {
     
 @Query("SELECT COUNT(c) FROM Contract c WHERE c.status = :status")
     long countByStatusParam(ContractStatus status);
+
+    @Query("SELECT COUNT(DISTINCT c.user.id) FROM Contract c WHERE c.status = 'COMPLETED'")
+    long countDistinctCustomersWhoPurchased();
 }

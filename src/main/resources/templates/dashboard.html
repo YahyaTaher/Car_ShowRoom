@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
     <link rel="stylesheet" href="/css/style.css">
     <script src="/js/toast.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <style>
         .table-responsive {
             background: rgba(255, 255, 255, 0.5);
@@ -29,12 +30,35 @@
             <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.5rem; padding: 0;">
                 <li><a href="#inventory" class="nav-link" style="color: white; text-decoration: none;">Inventory Management</a></li>
                 <li><a href="#pricing" class="nav-link" style="color: white; text-decoration: none;">Pricing Controls</a></li>
-                <li><a href="#branches" class="nav-link" style="color: white; text-decoration: none;">Branch Logistics</a></li>
+                
             </ul>
         </aside>
 
         <main class="main-content">
             <div id="dashboard-stats" class="row g-4 mb-5"></div>
+            <div class="row g-4 mb-5">
+                <div class="col-lg-6">
+                    <div class="card border-0 shadow h-100">
+                        <div class="card-header">
+                            <h3>Sales Status</h3>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="salesStatusChart" height="140"></canvas>
+                            <div class="mt-3 text-muted" id="approved-sales-percent"></div>
+                            <div class="mt-2 text-muted" id="customers-purchased-count"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="card border-0 shadow h-100">
+                        
+                        <div class="card-body">
+                            <canvas id="availableUnitsChart" height="140"></canvas>
+                            <div class="mt-3 text-muted" id="available-units-total"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <!-- Cars Table -->
             <div class="card animate-fade-in-down">
                 <div class="card-header d-flex justify-content-between align-items-center">
@@ -89,6 +113,22 @@
                             <option value="2">Downtown, LA</option>
                         </select>
                     </div>
+                    <div class="form-group">
+                        <label>Price</label>
+                        <input type="number" id="car-price" class="form-control" step="0.01" min="0.01" placeholder="e.g. 45000" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Quantity Available</label>
+                        <input type="number" id="car-quantity" class="form-control" min="0" step="1" value="1" required>
+                    </div>
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label>Colors (one per line)</label>
+                        <textarea id="car-colors" class="form-control" rows="2" placeholder="Black&#10;White&#10;Red"></textarea>
+                    </div>
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label>Image URLs (one per line)</label>
+                        <textarea id="car-images" class="form-control" rows="3" placeholder="https://example.com/car-front.jpg&#10;https://example.com/car-side.jpg"></textarea>
+                    </div>
                     <div class="form-group" style="display: flex; align-items: flex-end;">
                         <button type="submit" class="btn btn-primary" style="width: 100%;">Add Car</button>
                     </div>
@@ -121,11 +161,31 @@
                 </form>
             </section>
 
-            <section id="branches" class="card animate-fade-in-down" style="animation-delay: 0.3s;">
-                <div class="card-header">
-                    <h3>Manage Branches</h3>
+            
+            <section id="contracts" class="card animate-fade-in-down" style="animation-delay: 0.4s;">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h3>Pending Purchases</h3>
+                    <button class="btn btn-sm btn-primary" onclick="loadPendingContracts()">Refresh</button>
                 </div>
-                <p>Branch management features to be implemented.</p>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="contractsTable" class="table table-hover align-middle" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>User</th>
+                                    <th>Customer</th>
+                                    <th>Car</th>
+                                    <th>Branch</th>
+                                    <th>Price</th>
+                                    <th>Qty</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
             </section>
         </main>
     </div>
@@ -141,6 +201,7 @@
     <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
     <script src="/js/api.js"></script>
     <script src="/js/auth.js"></script>
+    <script src="/js/options.js"></script>
     <script src="/js/dashboard.js"></script>
 </body>
 </html>

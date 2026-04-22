@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface BranchRepository extends JpaRepository<Branch, Long> {
     Optional<Branch> findByName(String name);
     Optional<Branch> findByCity(String city);
+    java.util.List<Branch> findAllByOrderByNameAsc();
 }

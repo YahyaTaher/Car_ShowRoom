@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Details - Premium Auto</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <nav class="navbar" id="main-nav"></nav>
+
+    <div class="container py-4">
+        <div class="card">
+            <div class="row g-4">
+                <div class="col-lg-6">
+                    <img id="car-main-image" src="" alt="Car image" class="img-fluid rounded" style="width: 100%; max-height: 340px; object-fit: cover;">
+                </div>
+                <div class="col-lg-6">
+                    <h2 id="car-title">Car Details</h2>
+                    <p class="text-muted mb-1" id="car-branch"></p>
+                    <p class="text-muted mb-1" id="car-year"></p>
+                    <p class="text-muted mb-1" id="car-colors"></p>
+                    <p class="text-muted mb-3" id="car-qty"></p>
+                    <h3 class="text-success mb-4" id="car-price"></h3>
+                    <div class="d-flex gap-2">
+                        <a href="/cars" class="btn btn-secondary">Back To Cars</a>
+                        <button id="proceed-btn" class="btn btn-primary">Proceed To Contract</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/api.js"></script>
+    <script src="/js/auth.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/js/car-details.js"></script>
+</body>
+</html>
+

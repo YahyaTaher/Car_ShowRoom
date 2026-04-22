@@ -8,8 +8,17 @@ import java.util.List;
 
 @Repository
 public interface CarRepository extends JpaRepository<Car, Long> {
-    @Query("SELECT c FROM Car c WHERE c.status = 'AVAILABLE'")
+    @Query("SELECT c FROM Car c WHERE c.status = 'AVAILABLE' AND c.quantityAvailable > 0")
     List<Car> findAvailableCars();
+
+    @Query("SELECT c.branch.name, COALESCE(SUM(c.quantityAvailable), 0) FROM Car c GROUP BY c.branch.name ORDER BY c.branch.name")
+    List<Object[]> sumAvailableUnitsByBranch();
+
+    @Query("SELECT COALESCE(SUM(c.quantityAvailable), 0) FROM Car c WHERE c.status = 'AVAILABLE'")
+    long sumAvailableUnits();
+
+    @Query("SELECT DISTINCT c.brand FROM Car c WHERE c.brand IS NOT NULL AND c.brand <> '' ORDER BY c.brand")
+    List<String> findDistinctBrands();
     
     List<Car> findByBrand(String brand);
     
